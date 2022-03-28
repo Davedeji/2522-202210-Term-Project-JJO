@@ -54,6 +54,13 @@ public class JjoApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).jump();
             }
         }, KeyCode.W);
+
+        getInput().addAction(new UserAction("Stop") {
+            @Override
+            protected void onAction() {
+                player.getComponent(PlayerComponent.class).stop();
+            }
+        }, KeyCode.S);
     }
 
     /**

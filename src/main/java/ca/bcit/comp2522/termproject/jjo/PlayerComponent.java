@@ -38,4 +38,11 @@ public class PlayerComponent extends Component {
         physics.setVelocityY(-400);
     }
 
+    /**
+     * Stops character.
+     */
+    public void stop() {
+        physics.setVelocityX(0);
+    }
+
 }
