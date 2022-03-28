@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="13">
+ <editorsettings>
+  <export target="main_new.tmj" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="spritesheet_ground" tilewidth="70" tileheight="70" spacing="2" tilecount="392" columns="14">
+  <image source="../../Downloads/platformer-pack-redux-360-assets/Spritesheets/spritesheet_ground.png" width="1024" height="2048"/>
+ </tileset>
+ <tileset firstgid="393" name="spritesheet_tiles" tilewidth="70" tileheight="70" spacing="2" tilecount="392" columns="14">
+  <image source="../COMP2522/2522-202210-Term-Project-JJO/src/main/resources/ca/bcit/comp2522/termproject/jjo/assets/textures/spritesheet_tiles.png" width="1024" height="2048"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="15" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,197,197,197,197,197,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,197,197,197,197,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,197,197,197,0,0,
+407,407,407,407,407,407,407,407,407,407,407,407,407,407,407
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="4" type="platform" x="15.5894" y="637.216" width="1036.69" height="1.94867"/>
+  <object id="5" type="platform" x="214.354" y="438.452" width="270.866" height="46.7682"/>
+  <object id="6" type="platform" x="567.064" y="296.198" width="339.069" height="52.6142"/>
+  <object id="7" x="574.859" y="-173.432"/>
+  <object id="8" type="platform" x="703.471" y="561.218" width="202.662" height="66.2549"/>
+  <object id="11" type="coin" x="627.473" y="214.354" width="75.9983" height="62.3575"/>
+  <object id="12" type="coin" x="279.635" y="282.558" width="75.9983" height="62.3575"/>
+ </objectgroup>
+</map>

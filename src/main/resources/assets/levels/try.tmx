@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.1" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="70" tileheight="70" nextobjectid="8">
+ <tileset firstgid="1" name="spritesheet_ground" tilewidth="70" tileheight="70" spacing="2" tilecount="392" columns="14">
+  <image source="spritesheet_ground.png" width="1024" height="2048"/>
+ </tileset>
+ <tileset firstgid="393" name="spritesheet_complete" tilewidth="70" tileheight="70" spacing="2" tilecount="1568" columns="56">
+  <image source="../platformer-pack-redux-360-assets/Spritesheets/spritesheet_complete.png" width="4096" height="2048"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="15" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" type="platform" x="2.46245" y="625.462" width="1041.62" height="9.84979"/>
+ </objectgroup>
+</map>
