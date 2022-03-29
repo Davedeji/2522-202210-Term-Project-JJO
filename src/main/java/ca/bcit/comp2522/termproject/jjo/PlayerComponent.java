@@ -35,7 +35,7 @@ public class PlayerComponent extends Component {
      * Moves character up, adjusts its Y axis coordinate.
      */
     public void jump() {
-        physics.setVelocityY(-400);
+        physics.setVelocityY(-150);
     }
 
     /**

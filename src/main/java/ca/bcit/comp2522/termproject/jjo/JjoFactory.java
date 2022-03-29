@@ -35,7 +35,7 @@ public class JjoFactory implements EntityFactory {
         return FXGL.entityBuilder(data)
                 .type(JjoType.COIN)
                 .viewWithBBox(new Circle(data.<Integer>get("width") / 2, Color.GOLD))
-                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
                 .build();
     }
 
