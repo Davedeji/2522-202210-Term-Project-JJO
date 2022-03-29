@@ -1,8 +1,11 @@
 package ca.bcit.comp2522.termproject.jjo;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.dsl.components.AutoRotationComponent;
+import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 import com.almasb.fxgl.entity.*;
 import com.almasb.fxgl.entity.components.CollidableComponent;
+import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
@@ -11,11 +14,28 @@ import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+
+import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 
 public class JjoFactory implements EntityFactory {
     private static final float DEF_FRICTION = 3.0f;
     private static final int PLAYER_SIZE = 50;
+
+    /**
+     * Spawns background.
+     *
+     * @param data the data of the background.
+     * @return the background.
+     */
+    @Spawns("background")
+    public Entity newBackground(final SpawnData data) {
+        return entityBuilder(data)
+                .view(new ScrollingBackgroundView(texture("background/back.png").getImage(), getAppWidth(), getAppHeight()))
+                .zIndex(-100)
+                .with(new IrremovableComponent())
+                .build();
+    }
 
     /**
      * Spawns a platform.
