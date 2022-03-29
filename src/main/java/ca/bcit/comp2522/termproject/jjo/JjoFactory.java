@@ -10,13 +10,11 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 
 public class JjoFactory implements EntityFactory {
-    private static final float FRICTION = 3.0f;
+    private static final float DEF_FRICTION = 3.0f;
     private static final int PLAYER_SIZE = 50;
 
     /**
@@ -27,6 +25,26 @@ public class JjoFactory implements EntityFactory {
      */
     @Spawns("platform")
     public Entity newPlatform(final SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.STATIC);
+        physics.setFixtureDef(new FixtureDef().friction(0.0f));
+
+        return entityBuilder(data)
+                .type(JjoType.PLATFORM)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(physics)
+                .build();
+    }
+
+    /**
+     * Spawns a platform Floor.
+     *
+     * @param data the data of the platform Floor.
+     * @return the platform Floor.
+     */
+    @Spawns("platformFloor")
+    public Entity newPlatformFloor(final SpawnData data) {
+
         return entityBuilder(data)
                 .type(JjoType.PLATFORM)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
@@ -62,7 +80,7 @@ public class JjoFactory implements EntityFactory {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 
-        physics.setFixtureDef(new FixtureDef().friction(FRICTION));
+        physics.setFixtureDef(new FixtureDef().friction(DEF_FRICTION));
         Image character = new Image("idle.gif", PLAYER_SIZE, PLAYER_SIZE, true, true);
 
         return entityBuilder(data)
