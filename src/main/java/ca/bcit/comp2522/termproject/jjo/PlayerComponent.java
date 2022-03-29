@@ -11,33 +11,29 @@ import com.almasb.fxgl.physics.PhysicsComponent;
  * @version 2022
  */
 public class PlayerComponent extends Component {
+    private static final double Y_VELOCITY = 200;
+    private static final double X_VELOCITY = 150;
 
     private PhysicsComponent physics;
-
-//    @Override
-    public void onUpdate(final Entity entity, final double tpf) {
-
-    }
 
     /**
      * Moves character left, adjusts its X axis coordinate.
      */
     public void left() {
-        physics.setVelocityX(-150);
+        physics.setVelocityX(-X_VELOCITY);
     }
     /**
      * Moves character right, adjusts its X axis coordinate.
      */
     public void right() {
-        physics.setVelocityX(150);
+        physics.setVelocityX(X_VELOCITY);
     }
     /**
      * Moves character up, adjusts its Y axis coordinate.
      */
     public void jump() {
-        physics.setVelocityY(-150);
+        physics.setVelocityY(-Y_VELOCITY);
     }
-
     /**
      * Stops character.
      */

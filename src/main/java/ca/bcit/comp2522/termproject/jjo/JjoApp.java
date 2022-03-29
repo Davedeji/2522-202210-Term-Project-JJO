@@ -17,7 +17,12 @@ import static com.almasb.fxgl.dsl.FXGL.*;
  * @version 2022
  */
 public class JjoApp extends GameApplication {
+    private static final int GRID_SIZE = 16;
+    private static final int PLAYER_SIZE = 50;
+    private static final int GAME_WIDTH = 50;
+    private static final int GAME_HEIGHT = 60;
     private Entity player;
+
 
     /**
      * Initializes screen settings.
@@ -26,8 +31,8 @@ public class JjoApp extends GameApplication {
      */
     @Override
     protected void initSettings(final GameSettings settings) {
-        settings.setWidth(50 * 16);
-        settings.setHeight(60 * 16);
+        settings.setWidth(GAME_WIDTH * GRID_SIZE);
+        settings.setHeight(GAME_HEIGHT * GRID_SIZE);
     }
 
     /**
@@ -72,9 +77,7 @@ public class JjoApp extends GameApplication {
         getGameWorld().addEntityFactory(new JjoFactory());
         setLevelFromMap("3.tmx");
 
-        player = getGameWorld().spawn("player", 50, 50);
-
-//        spawn("background");
+        player = getGameWorld().spawn("player", PLAYER_SIZE, PLAYER_SIZE);
     }
 
     /**
