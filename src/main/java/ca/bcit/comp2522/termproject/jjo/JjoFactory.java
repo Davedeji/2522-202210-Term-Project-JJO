@@ -18,9 +18,16 @@ import javafx.scene.image.ImageView;
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 
+/**
+ * Initializes the JjoFactory with entities.
+ *
+ * @author Vasily Shorin, Adedeji Toki
+ * @version 2022
+ */
 public class JjoFactory implements EntityFactory {
     private static final float DEF_FRICTION = 3.0f;
     private static final int PLAYER_SIZE = 50;
+    private static final int ZINDEX = -100;
 
     /**
      * Spawns background.
@@ -31,8 +38,9 @@ public class JjoFactory implements EntityFactory {
     @Spawns("background")
     public Entity newBackground(final SpawnData data) {
         return entityBuilder(data)
-                .view(new ScrollingBackgroundView(texture("background/back.png").getImage(), getAppWidth(), getAppHeight()))
-                .zIndex(-100)
+                .view(new ScrollingBackgroundView(texture("background/back.png").getImage(),
+                        getAppWidth(), getAppHeight()))
+                .zIndex(ZINDEX)
                 .with(new IrremovableComponent())
                 .build();
     }
