@@ -11,6 +11,7 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -27,7 +28,7 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 public class JjoFactory implements EntityFactory {
     private static final float DEF_FRICTION = 3.0f;
     private static final int PLAYER_SIZE = 50;
-    private static final int ZINDEX = -100;
+    private static final int ZINDEX = -500;
 
     /**
      * Spawns background.
@@ -107,6 +108,8 @@ public class JjoFactory implements EntityFactory {
     public Entity newPlayer(final SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
+//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
+        physics.addGroundSensor(new HitBox(new Point2D(5, PLAYER_SIZE - 5), BoundingShape.box(PLAYER_SIZE - 10, 10)));
 
         physics.setFixtureDef(new FixtureDef().friction(DEF_FRICTION));
         Image character = new Image("idle.gif", PLAYER_SIZE, PLAYER_SIZE, true, true);

@@ -61,7 +61,7 @@ public class JjoApp extends GameApplication {
             protected void onAction() {
                 player.getComponent(PlayerComponent.class).jump();
             }
-        }, KeyCode.W, VirtualButton.UP);
+        }, KeyCode.W, VirtualButton.A);
 
         getInput().addAction(new UserAction("Stop") {
             @Override
@@ -95,6 +95,13 @@ public class JjoApp extends GameApplication {
             @Override
             protected void onCollisionBegin(final Entity player, final Entity coin) {
                 coin.removeFromWorld();
+            }
+        });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.PLATFORM) {
+            @Override
+            protected void onCollisionBegin(final Entity player, final Entity platform) {
+
             }
         });
     }
