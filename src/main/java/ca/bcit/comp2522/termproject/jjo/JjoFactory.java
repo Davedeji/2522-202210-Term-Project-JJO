@@ -14,6 +14,9 @@ import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -39,6 +42,16 @@ public class JjoFactory implements EntityFactory {
     @Spawns("background")
     public Entity newBackground(final SpawnData data) {
         return entityBuilder(data)
+                .view(new ScrollingBackgroundView(texture("background/1.png").getImage(),
+                        getAppWidth(), getAppHeight()))
+                .view(new ScrollingBackgroundView(texture("background/2.png").getImage(),
+                        getAppWidth(), getAppHeight()))
+                .view(new ScrollingBackgroundView(texture("background/3.png").getImage(),
+                        getAppWidth(), getAppHeight()))
+                .view(new ScrollingBackgroundView(texture("background/4.png").getImage(),
+                        getAppWidth(), getAppHeight()))
+                .view(new ScrollingBackgroundView(texture("background/5.png").getImage(),
+                        getAppWidth(), getAppHeight()))
                 .view(new ScrollingBackgroundView(texture("background/back.png").getImage(),
                         getAppWidth(), getAppHeight()))
                 .zIndex(ZINDEX)
@@ -108,18 +121,53 @@ public class JjoFactory implements EntityFactory {
     public Entity newPlayer(final SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
+        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         physics.addGroundSensor(new HitBox(new Point2D(5, PLAYER_SIZE - 5), BoundingShape.box(PLAYER_SIZE - 10, 10)));
 
         physics.setFixtureDef(new FixtureDef().friction(DEF_FRICTION));
-        Image character = new Image("idle.gif", PLAYER_SIZE, PLAYER_SIZE, true, true);
+        Image character = new Image("run.gif", PLAYER_SIZE, PLAYER_SIZE, true, true);
 
         return entityBuilder(data)
                 .type(JjoType.PLAYER)
                 .viewWithBBox(new ImageView(character))
+                .bbox(new HitBox(new Point2D(5, 5), BoundingShape.circle(12)))
+                .bbox(new HitBox(new Point2D(10, 25), BoundingShape.box(10, 17)))
                 .with(physics)
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
                 .build();
-}
+    }
+
+    /**
+     * Spawns a enemy.
+     *
+     * @param data the data of the enemy.
+     * @return the enemy.
+     */
+    @Spawns("enemy")
+    public Entity newEnemy(final SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.KINEMATIC);
+        Image enemy = new Image("enemy.gif", PLAYER_SIZE, PLAYER_SIZE, true, true);
+
+        return entityBuilder(data)
+                .type(JjoType.ENEMY)
+                .viewWithBBox(new ImageView(enemy))
+//                .bbox(new HitBox(new Point2D(5, 5), BoundingShape.circle(12)))
+//                .bbox(new HitBox(new Point2D(10, 25), BoundingShape.box(10, 17)))
+                .with(physics)
+                .with(new CollidableComponent(true))
+                .with(new PlayerComponent())
+                .build();
+    }
+
+
+    @Spawns("health")
+    public Entity newHealthBar(final SpawnData data) {
+        return entityBuilder(data)
+//                .type(JjoType.HEALTH)
+                .viewWithBBox(new Circle(data.<Integer>get("width")/2, Color.RED))
+                .with(new CollidableComponent(true))
+                .build();
+    }
 }

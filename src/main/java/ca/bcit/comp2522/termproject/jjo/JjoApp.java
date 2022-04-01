@@ -2,13 +2,12 @@ package ca.bcit.comp2522.termproject.jjo;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.input.virtual.VirtualButton;
 import com.almasb.fxgl.physics.CollisionHandler;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -20,9 +19,10 @@ import static com.almasb.fxgl.dsl.FXGL.*;
  */
 public class JjoApp extends GameApplication {
     private static final int GRID_SIZE = 16;
-    private static final int PLAYER_SIZE = 50;
-    private static final int GAME_WIDTH = 50;
-    private static final int GAME_HEIGHT = 60;
+    private static final int PLAYER_X = 200;
+    private static final int PLAYER_Y = 500;
+    private static final int GAME_WIDTH = 200;
+    private static final int GAME_HEIGHT = 40;
     private Entity player;
 
 
@@ -33,8 +33,8 @@ public class JjoApp extends GameApplication {
      */
     @Override
     protected void initSettings(final GameSettings settings) {
-        settings.setWidth(GAME_WIDTH * GRID_SIZE);
-        settings.setHeight(GAME_HEIGHT * GRID_SIZE);
+        settings.setWidth(1280);
+        settings.setHeight(720);
     }
 
     /**
@@ -58,7 +58,7 @@ public class JjoApp extends GameApplication {
 
         getInput().addAction(new UserAction("Jump") {
             @Override
-            protected void onAction() {
+            protected void onActionEnd() {
                 player.getComponent(PlayerComponent.class).jump();
             }
         }, KeyCode.W, VirtualButton.A);
@@ -80,11 +80,16 @@ public class JjoApp extends GameApplication {
 
         spawn("background");
 
+        setLevelFromMap("level2.tmx");
 
-        setLevelFromMap("3.tmx");
-
-        player = getGameWorld().spawn("player", PLAYER_SIZE, PLAYER_SIZE);
+        player = getGameWorld().spawn("player", PLAYER_X, PLAYER_Y);
+        // Follows character on map and adjusts screen accordingly
+        Viewport viewport = getGameScene().getViewport();
+        viewport.setBounds(-1500, 0, 200 * 16, getAppHeight());
+        viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+        viewport.setLazy(true);
     }
+
 
     /**
      * Initializes physics.
@@ -98,11 +103,35 @@ public class JjoApp extends GameApplication {
             }
         });
 
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.PLATFORM) {
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.ENEMY) {
             @Override
-            protected void onCollisionBegin(final Entity player, final Entity platform) {
-
+            protected void onCollisionBegin(final Entity player, final Entity enemy) {
+                System.out.println("You touched enemy");
+                // decrease health
+                player.getComponent(PlayerComponent.class).decreaseHealth();
+                getDialogService().showMessageBox("You touched enemy");
+                System.out.println("Health: " + player.getComponent(PlayerComponent.class).getHealth());
+                // if health is 0, game over
+                if (player.getComponent(PlayerComponent.class).getHealth() == 0) {
+//                    getGameController().setGameOver();
+                    showGameOver();
+                }
             }
+        });
+    }
+
+
+    /**
+     * Shows game over screen and prompts user to play again.
+     */
+    private void showGameOver() {
+        getDialogService().showConfirmationBox("Game Over You died.\nPress R to restart", yes -> {
+            if (yes) {
+                getGameController().startNewGame();
+            } else {
+                getGameController().exit();
+            }
+
         });
     }
 
