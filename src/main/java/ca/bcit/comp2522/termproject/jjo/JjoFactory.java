@@ -16,6 +16,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
 
@@ -29,6 +34,27 @@ public class JjoFactory implements EntityFactory {
     private static final float DEF_FRICTION = 3.0f;
     private static final int PLAYER_SIZE = 50;
     private static final int ZINDEX = -500;
+    private ArrayList<CoinPosition> copyEntities = new ArrayList<>();
+    private ArrayList<Double> coinX = new ArrayList<>();
+    private ArrayList<Double> coinY = new ArrayList<>();
+
+    //constructor
+    public JjoFactory() {
+        // refactor this mess
+        try {
+            FileInputStream fos = new FileInputStream("output.ser");
+            ObjectInputStream ois = new ObjectInputStream(fos);
+            copyEntities = (ArrayList<CoinPosition>) ois.readObject();
+            copyEntities.forEach(e -> { // for each MenuItem in MenuArray
+                coinX.add(e.getX());
+                coinY.add(e.getY());
+            });
+            ois.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
 
     /**
      * Spawns background.
@@ -89,6 +115,10 @@ public class JjoFactory implements EntityFactory {
      */
     @Spawns("coin")
     public Entity newCoin(final SpawnData data) {
+        if (coinX.contains(data.getX()) && coinY.contains(data.getY())) {
+            return entityBuilder(data).build();
+        }
+
         double coinSize = data.<Integer>get("width");
         Image coin = new Image("coin.png", coinSize, coinSize, true, true);
         return FXGL.entityBuilder(data)
@@ -108,7 +138,6 @@ public class JjoFactory implements EntityFactory {
     public Entity newPlayer(final SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         physics.addGroundSensor(new HitBox(new Point2D(5, PLAYER_SIZE - 5), BoundingShape.box(PLAYER_SIZE - 10, 10)));
 
         physics.setFixtureDef(new FixtureDef().friction(DEF_FRICTION));

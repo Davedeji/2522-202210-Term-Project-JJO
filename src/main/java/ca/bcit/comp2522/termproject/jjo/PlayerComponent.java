@@ -28,9 +28,8 @@ public class PlayerComponent extends Component {
 //            }
 //        });
         physics.onGroundProperty().addListener((o, oldValue, newValue) -> {
-            System.out.println(newValue ? "On Ground" : "In the air");
             if (newValue) {
-                jumps = 3;
+                jumps = 2;
             }
         });
     }
@@ -51,14 +50,12 @@ public class PlayerComponent extends Component {
      */
     public void jump() {
         if (jumps == 0) {
-//            System.out.println("You can't jump anymore!");
             return;
         }
 
         physics.setVelocityY(-Y_VELOCITY);
 
         jumps--;
-        System.out.println("jumps: " + jumps);
     }
     /**
      * Stops character.

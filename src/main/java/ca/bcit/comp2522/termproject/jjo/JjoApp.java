@@ -10,6 +10,10 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Map;
+
 import static com.almasb.fxgl.dsl.FXGL.*;
 
 /**
@@ -24,6 +28,10 @@ public class JjoApp extends GameApplication {
     private static final int GAME_WIDTH = 50;
     private static final int GAME_HEIGHT = 60;
     private Entity player;
+    private double playerXPos = 50.0;
+    private double playerYPos = 50.0;
+    private ArrayList<CoinPosition> removedEntities = new ArrayList<>();
+//    private ArrayList<CoinPosition> copyEntities = new ArrayList<>();
 
 
     /**
@@ -58,7 +66,7 @@ public class JjoApp extends GameApplication {
 
         getInput().addAction(new UserAction("Jump") {
             @Override
-            protected void onAction() {
+            protected void onActionEnd() {
                 player.getComponent(PlayerComponent.class).jump();
             }
         }, KeyCode.W, VirtualButton.A);
@@ -69,6 +77,40 @@ public class JjoApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).stop();
             }
         }, KeyCode.S);
+        getInput().addAction(new UserAction("Save") {
+            @Override
+            protected void onActionEnd() {
+                System.out.println("Saving");
+                playerXPos = player.getPosition().getX();
+                playerYPos = player.getPosition().getY();
+                try {
+                    FileOutputStream fos = new FileOutputStream("output.ser");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(removedEntities); // write MenuArray to ObjectOutputStream
+                    oos.writeObject(playerXPos);
+                    oos.writeObject(playerYPos);
+                    oos.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }, KeyCode.K);
+    }
+
+    protected void loadSavedGame() {
+        System.out.println("Loading");
+        try {
+            FileInputStream fos = new FileInputStream("output.ser");
+            ObjectInputStream ois = new ObjectInputStream(fos);
+            removedEntities = (ArrayList<CoinPosition>) ois.readObject();
+            playerXPos = (Double) ois.readObject();
+            playerYPos = (Double) ois.readObject();
+            System.out.println("Player X: " + playerXPos);
+            System.out.println("Player Y: " + playerYPos);
+            ois.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -76,14 +118,12 @@ public class JjoApp extends GameApplication {
      */
     @Override
     protected void initGame() {
+        // Load saved game
+        loadSavedGame();
         getGameWorld().addEntityFactory(new JjoFactory());
-
         spawn("background");
-
-
         setLevelFromMap("3.tmx");
-
-        player = getGameWorld().spawn("player", PLAYER_SIZE, PLAYER_SIZE);
+        player = getGameWorld().spawn("player", playerXPos, playerYPos);
     }
 
     /**
@@ -94,6 +134,7 @@ public class JjoApp extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.COIN) {
             @Override
             protected void onCollisionBegin(final Entity player, final Entity coin) {
+                removedEntities.add(new CoinPosition(coin.getPosition().getX(), coin.getPosition().getY()));
                 coin.removeFromWorld();
             }
         });
