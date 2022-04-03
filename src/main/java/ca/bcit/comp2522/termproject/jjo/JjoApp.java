@@ -8,7 +8,9 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.input.virtual.VirtualButton;
 import com.almasb.fxgl.physics.CollisionHandler;
+import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.io.*;
@@ -29,7 +31,7 @@ public class JjoApp extends GameApplication {
     private static final int GAME_WIDTH = 50;
     private static final int GAME_HEIGHT = 60;
     private Entity player;
-    private double playerXPos = 50.0;
+    private double playerXPos = 150.0;
     private double playerYPos = 50.0;
     private ArrayList<CoinPosition> removedEntities = new ArrayList<>();
 //    private ArrayList<CoinPosition> copyEntities = new ArrayList<>();
@@ -44,7 +46,12 @@ public class JjoApp extends GameApplication {
     protected void initSettings(final GameSettings settings) {
         settings.setWidth(1280);
         settings.setHeight(720);
+        System.out.println("init SceneFactory");
+        settings.setSceneFactory(new JjoSceneFactory());
+        System.out.println("Done SceneFactory");
+        settings.setTitle("Jack Jumps");
     }
+
 
     /**
      * Initializes user's input.
@@ -98,6 +105,21 @@ public class JjoApp extends GameApplication {
         }, KeyCode.K);
     }
 
+    private void showLoadGame() {
+//        File file = new File("output.ser");
+//        if (!file.exists()) {
+//            return;
+//        }
+        getDialogService().showConfirmationBox("Load saved game or start new game?", yes -> {
+            if (yes) {
+                loadSavedGame();
+            } else {
+                return;
+            }
+
+        });
+    }
+
     protected void loadSavedGame() {
         System.out.println("Loading");
         try {
@@ -120,7 +142,9 @@ public class JjoApp extends GameApplication {
     @Override
     protected void initGame() {
         // Load saved game
-        loadSavedGame();
+//        showLoadGame();
+//        loadSavedGame();
+        System.out.println("init Game");
         getGameWorld().addEntityFactory(new JjoFactory());
         spawn("background");
 
@@ -129,9 +153,11 @@ public class JjoApp extends GameApplication {
         player = getGameWorld().spawn("player", playerXPos, playerYPos);
         // Follows character on map and adjusts screen accordingly
         Viewport viewport = getGameScene().getViewport();
+//        Viewport viewport = get().getViewport();
         viewport.setBounds(-1500, 0, 200 * 16, getAppHeight());
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         viewport.setLazy(true);
+
     }
 
 
