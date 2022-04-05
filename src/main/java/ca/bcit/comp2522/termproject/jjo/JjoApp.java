@@ -8,14 +8,18 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.input.virtual.VirtualButton;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.ui.UI;
 import javafx.application.Platform;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -34,6 +38,7 @@ public class JjoApp extends GameApplication {
     private double playerXPos = 150.0;
     private double playerYPos = 50.0;
     private ArrayList<CoinPosition> removedEntities = new ArrayList<>();
+    private JjoController uiController;
 //    private ArrayList<CoinPosition> copyEntities = new ArrayList<>();
 
 
@@ -136,11 +141,18 @@ public class JjoApp extends GameApplication {
         }
     }
 
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("lives", 3);
+    }
+
     /**
      * Initializes game.
      */
     @Override
     protected void initGame() {
+//        FXGl.getGameState().
         // Load saved game
 //        showLoadGame();
 //        loadSavedGame();
@@ -161,6 +173,7 @@ public class JjoApp extends GameApplication {
     }
 
 
+
     /**
      * Initializes physics.
      */
@@ -171,6 +184,7 @@ public class JjoApp extends GameApplication {
             protected void onCollisionBegin(final Entity player, final Entity coin) {
                 removedEntities.add(new CoinPosition(coin.getPosition().getX(), coin.getPosition().getY()));
                 coin.removeFromWorld();
+                uiController.addLife();
             }
         });
 
@@ -178,19 +192,27 @@ public class JjoApp extends GameApplication {
             @Override
             protected void onCollisionBegin(final Entity player, final Entity enemy) {
                 System.out.println("You touched enemy");
-                // decrease health
-                player.getComponent(PlayerComponent.class).decreaseHealth();
-                getDialogService().showMessageBox("You touched enemy");
-                System.out.println("Health: " + player.getComponent(PlayerComponent.class).getHealth());
+                inc("lives", -1);
+                uiController.removeLife();
                 // if health is 0, game over
-                if (player.getComponent(PlayerComponent.class).getHealth() == 0) {
-//                    getGameController().setGameOver();
+                if (geti("lives")==0) {
+
                     showGameOver();
                 }
             }
         });
     }
 
+    @Override
+    protected void initUI() {
+        uiController = new JjoController(getGameScene());
+
+        UI ui = getAssetLoader().loadUI("main.fxml", uiController);
+
+        IntStream.range(0, geti("lives")).forEach(i -> uiController.addLife());
+
+        getGameScene().addUI(ui);
+    }
 
     /**
      * Shows game over screen and prompts user to play again.
