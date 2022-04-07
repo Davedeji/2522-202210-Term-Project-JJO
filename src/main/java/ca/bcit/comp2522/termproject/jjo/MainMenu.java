@@ -99,6 +99,11 @@ public class MainMenu extends FXGLMenu {
         textResume.setTranslateY(100);
         textResume.setMouseTransparent(true);
 
+        Text textLogin = FXGL.getUIFactoryService().newText("LOGIN", Color.WHITE, FontType.GAME, 24.0);
+        textResume.setTranslateX(50);
+        textResume.setTranslateY(100);
+        textResume.setMouseTransparent(true);
+
         Text textExit = FXGL.getUIFactoryService().newText("EXIT", Color.WHITE, FontType.GAME, 24.0);
         textExit.setTranslateX(200);
         textExit.setTranslateY(100);

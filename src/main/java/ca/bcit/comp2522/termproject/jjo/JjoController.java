@@ -62,9 +62,9 @@ public class JjoController implements UIController {
 
         lives.remove(texture);
 
-//        Animation animation = getAnimationLoseLife(texture);
-//        animation.setOnFinished(e -> gameScene.removeUINode(texture));
-//        animation.play();
+        Animation animation = getAnimationLoseLife(texture);
+        animation.setOnFinished(e -> gameScene.removeUINode(texture));
+        animation.play();
 
         Viewport viewport = gameScene.getViewport();
         Node flash = new Rectangle(viewport.getWidth(), viewport.getHeight(), Color.rgb(190, 10, 15, 0.5));
