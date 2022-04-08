@@ -126,6 +126,4 @@ public class MainMenu extends FXGLMenu {
 //        System.out.println("onUpdate");
         animation.onUpdate(tpf);
     }
-
-
 }

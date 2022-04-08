@@ -107,17 +107,4 @@ public class PlayerComponent extends Component {
         physics.setVelocityX(0);
     }
 
-    public void decreaseHealth() {
-        health -= 1;
-    }
-
-    // get health
-    public int getHealth() {
-        return health;
-    }
-
-    // set health
-    public void setHealth(int health) {
-        this.health = health;
-    }
 }

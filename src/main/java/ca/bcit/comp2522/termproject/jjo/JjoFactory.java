@@ -151,7 +151,7 @@ public class JjoFactory implements EntityFactory {
     public Entity newPlayer(final SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
+//        physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(16, 38), BoundingShape.box(6, 8)));
         physics.addGroundSensor(new HitBox(new Point2D(5, PLAYER_SIZE - 5), BoundingShape.box(PLAYER_SIZE - 10, 10)));
 
         physics.setFixtureDef(new FixtureDef().friction(DEF_FRICTION));
@@ -169,7 +169,7 @@ public class JjoFactory implements EntityFactory {
     }
 
     /**
-     * Spawns a enemy.
+     * Spawns an enemy.
      *
      * @param data the data of the enemy.
      * @return the enemy.
