@@ -13,8 +13,8 @@ public class JjoSceneFactory extends SceneFactory {
         return new MainMenu(MenuType.MAIN_MENU);
     }
 
-    @Override
-    public FXGLMenu newGameMenu() {
-        return new MainMenu(MenuType.GAME_MENU);
-    }
+//    @Override
+//    public FXGLMenu newGameMenu() {
+//        return new MainMenu(MenuType.GAME_MENU);
+//    }
 }

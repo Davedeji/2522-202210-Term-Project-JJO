@@ -9,6 +9,10 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.ui.FontType;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -49,67 +53,53 @@ public class MainMenu extends FXGLMenu {
     private Animation<?> animation;
 
     public MainMenu(MenuType type) {
-        super(MenuType.GAME_MENU);
+        super(type);
+        Rectangle background = new Rectangle(FXGL.getAppWidth() + 200, FXGL.getAppHeight() + 200);
+        background.setFill(Color.DARKGREEN);
+        background.setX(0);
+        background.setY(0);
+        background.setTranslateX(-FXGL.getAppWidth() / 2.0);
+        background.setTranslateY(-FXGL.getAppHeight() / 2.0);
+
+        TextField username = new TextField("Username");
+        username.setOnMouseClicked(e -> {
+        username.setText("");
+        });
+        username.setTranslateY(100);
+
+        TextField password = new TextField("Password");
+        password.setOnMouseClicked(e -> {
+        password.setText("");
+        });
+        password.setTranslateY(150);
+
+        Button login = new Button("Login");
+        login.setTranslateY(200);
+        login.setOnAction(e -> {
+            if (!username.getText().equals("") && !password.getText().equals("")) {
+                boolean loginSuccessful = AuthenticationHandler.login(username.getText(), password.getText());
+                if (loginSuccessful) {
+                    fireNewGame();
+                }
+            }
+        });
+
+        Button createAccount = new Button("Create Account");
+        createAccount.setTranslateY(250);
+        createAccount.setOnAction(e -> {
+            if (!username.getText().equals("") && !password.getText().equals("")) {
+                boolean signUpSuccessful = AuthenticationHandler.createAccount(username.getText(), password.getText());
+                if (signUpSuccessful) {
+                    fireNewGame();
+                }
+            }
+        });
+
+        getContentRoot().getChildren().addAll(background, username, password, login, createAccount);
 
         System.out.println("MainMenu");
         getContentRoot().setTranslateX(FXGL.getAppWidth() / 2.0 - SIZE);
         getContentRoot().setTranslateY(FXGL.getAppHeight() / 2.0 - SIZE);
-
-        var shape = Shape.subtract(new Circle(SIZE, SIZE, SIZE), new Rectangle(0, SIZE, SIZE*2, SIZE));
-
-        var shape2 = Shape.subtract(shape, new Rectangle(0, 0, SIZE, SIZE));
-
-        shape = Shape.subtract(shape, new Rectangle(SIZE, 0, SIZE, SIZE));
-
-        shape.setStrokeWidth(2.5);
-        shape.strokeProperty().bind(
-                Bindings.when(shape.hoverProperty()).then(Color.YELLOW).otherwise(Color.BLACK)
-        );
-
-        shape.fillProperty().bind(
-                Bindings.when(shape.pressedProperty()).then(Color.YELLOW).otherwise(Color.color(0.1, 0.05, 0.0, 0.75))
-        );
-
-        shape.setOnMouseClicked(e -> fireResume());
-
-        shape2.setStrokeWidth(2.5);
-        shape2.strokeProperty().bind(
-                Bindings.when(shape2.hoverProperty()).then(Color.YELLOW).otherwise(Color.BLACK)
-        );
-
-        shape2.fillProperty().bind(
-                Bindings.when(shape2.pressedProperty()).then(Color.YELLOW).otherwise(Color.color(0.1, 0.05, 0.0, 0.75))
-        );
-        shape2.setOnMouseClicked(e -> FXGL.getGameController().exit());
-
-        var shape3 = new Rectangle(SIZE*2, SIZE / 2);
-        shape3.setStrokeWidth(2.5);
-        shape3.strokeProperty().bind(
-                Bindings.when(shape3.hoverProperty()).then(Color.YELLOW).otherwise(Color.BLACK)
-        );
-
-        shape3.fillProperty().bind(
-                Bindings.when(shape3.pressedProperty()).then(Color.YELLOW).otherwise(Color.color(0.1, 0.05, 0.0, 0.75))
-        );
-
-        shape3.setTranslateY(SIZE);
-
-        Text textResume = FXGL.getUIFactoryService().newText("RESUME", Color.WHITE, FontType.GAME, 24.0);
-        textResume.setTranslateX(50);
-        textResume.setTranslateY(100);
-        textResume.setMouseTransparent(true);
-
-        Text textExit = FXGL.getUIFactoryService().newText("EXIT", Color.WHITE, FontType.GAME, 24.0);
-        textExit.setTranslateX(200);
-        textExit.setTranslateY(100);
-        textExit.setMouseTransparent(true);
-
-        Text textOptions = FXGL.getUIFactoryService().newText("OPTIONS", Color.WHITE, FontType.GAME, 24.0);
-        textOptions.setTranslateX(110);
-        textOptions.setTranslateY(195);
-        textOptions.setMouseTransparent(true);
-
-        getContentRoot().getChildren().addAll(shape, shape2, shape3, textResume, textExit, textOptions);
 
         getContentRoot().setScaleX(0);
         getContentRoot().setScaleY(0);
@@ -133,7 +123,9 @@ public class MainMenu extends FXGLMenu {
 
     @Override
     protected void onUpdate(double tpf) {
-        System.out.println("onUpdate");
+//        System.out.println("onUpdate");
         animation.onUpdate(tpf);
     }
+
+
 }

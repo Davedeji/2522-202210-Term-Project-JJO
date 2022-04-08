@@ -14,8 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Properties;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -50,6 +52,7 @@ public class JjoApp extends GameApplication {
         settings.setSceneFactory(new JjoSceneFactory());
         System.out.println("Done SceneFactory");
         settings.setTitle("Jack Jumps");
+        settings.setMainMenuEnabled(true);
     }
 
 
@@ -211,7 +214,12 @@ public class JjoApp extends GameApplication {
      *
      * @param args unused
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws ClassNotFoundException {
+//        boolean loggedIn = AuthenticationHandler.login("Vasily", "YesItIsOVer9000");
+//        if (loggedIn) {
+//            launch(args);
+//        }
+//        AuthenticationHandler.createAccount("Vasy", "YesItIsOVer9000");
         launch(args);
     }
 }
