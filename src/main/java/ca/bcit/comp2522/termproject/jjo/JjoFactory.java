@@ -141,6 +141,14 @@ public class JjoFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("checkpoint")
+    public Entity newCheckpoint(final SpawnData data) {
+        return entityBuilder(data)
+                .type(JjoType.CHECKPOINT)
+                .viewWithBBox(texture("exit_sign.png", 20, 18))
+                .with(new CollidableComponent(true))
+                .build();
+    }
     /**
      * Spawns a player.
      *

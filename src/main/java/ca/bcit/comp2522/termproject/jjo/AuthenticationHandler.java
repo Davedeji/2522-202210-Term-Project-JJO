@@ -6,7 +6,7 @@ public final class AuthenticationHandler {
     private static AuthenticationHandler instance;
     private static Connection connection;
     private static final String dbUser = "root";
-    private static final String dbPassword = "";
+    private static final String dbPassword = "iamskier";
 
 
     private AuthenticationHandler() throws ClassNotFoundException {
