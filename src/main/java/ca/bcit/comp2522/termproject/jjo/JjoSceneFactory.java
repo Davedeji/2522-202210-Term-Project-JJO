@@ -7,14 +7,14 @@ import com.almasb.fxgl.app.scene.SceneFactory;
 public class JjoSceneFactory extends SceneFactory {
 
 
-//    @Override
-//    public FXGLMenu newMainMenu() {
-//        System.out.println("Main Menu");
-//        return new JjoMainMenu(MenuType.MAIN_MENU);
-//    }
+    @Override
+    public FXGLMenu newMainMenu() {
+        System.out.println("Main Menu");
+        return new MainMenu(MenuType.MAIN_MENU);
+    }
 
 //    @Override
 //    public FXGLMenu newGameMenu() {
-//        return new JjoMainMenu(JjoMenuType.GAME_MENU);
+//        return new MainMenu(MenuType.GAME_MENU);
 //    }
 }

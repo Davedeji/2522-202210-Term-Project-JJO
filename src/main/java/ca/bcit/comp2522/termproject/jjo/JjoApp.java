@@ -22,8 +22,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.IntStream;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -60,19 +62,12 @@ public class JjoApp extends GameApplication {
     protected void initSettings(final GameSettings settings) {
         settings.setWidth(1280);
         settings.setHeight(720);
-//        settings.setMainMenuEnabled(true);
         System.out.println("init SceneFactory");
         settings.setSceneFactory(new JjoSceneFactory());
         System.out.println("Done SceneFactory");
         settings.setTitle("Jack Jumps");
-//        settings.setSceneFactory(new JjoSceneFactory(){
-//            @Override
-//            public FXGLMenu newMainMenu() {
-//                return new JjoMainMenu(MenuType.MAIN_MENU);
-//            }
-//        });
+        settings.setMainMenuEnabled(true);
     }
-
 
 
     /**
@@ -200,7 +195,6 @@ public class JjoApp extends GameApplication {
     }
 
 
-
     /**
      * Initializes physics.
      */
@@ -215,7 +209,6 @@ public class JjoApp extends GameApplication {
                     nextLevel();
                 }
                 coin.removeFromWorld();
-
             }
         });
 
@@ -314,7 +307,12 @@ public class JjoApp extends GameApplication {
      *
      * @param args unused
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws ClassNotFoundException {
+//        boolean loggedIn = AuthenticationHandler.login("Vasily", "YesItIsOVer9000");
+//        if (loggedIn) {
+//            launch(args);
+//        }
+//        AuthenticationHandler.createAccount("Vasy", "YesItIsOVer9000");
         launch(args);
     }
 }
