@@ -13,10 +13,12 @@ import com.almasb.fxgl.ui.UI;
 import com.almasb.fxgl.entity.level.Level;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.*;
@@ -169,7 +171,7 @@ public class JjoApp extends GameApplication {
         vars.put("lives", 3);
         vars.put("level", STARTING_LEVEL);
         vars.put("score", 0);
-//        vars.put("levelTime", 0);
+        vars.put("levelTime", 0.0);
     }
 
     /**
@@ -183,7 +185,7 @@ public class JjoApp extends GameApplication {
 //        showLoadGame();
 //        loadSavedGame();
         System.out.println("init Game");
-//        setLevelFromMap("level2.tmx");
+        setLevelFromMap("extralong.tmx");
         player = null;
         nextLevel();
         player = getGameWorld().spawn("player", 50, 50);
@@ -226,6 +228,7 @@ public class JjoApp extends GameApplication {
                 // if health is 0, game over
                 if (geti("lives")==0) {
                     showGameOver();
+//                    onPlayerDied();
                 }
             }
         });
@@ -248,20 +251,32 @@ public class JjoApp extends GameApplication {
      */
     @Override
     protected void onUpdate(final double tpf) {
-//        inc("levelTime", tpf);
+        inc("levelTime", tpf);
+
         if (player.getY() > getAppHeight()) {
-            onPlayerDied();
+//            showGameOver();
+//            onPlayerDied();
+//            requestNewGame();
+            getGameController().startNewGame();
         }
     }
 
     private void onPlayerDied() {
-        setLevel(geti("level"));
+        setLevelFromMap("extralong.tmx");
     }
 
 
     @Override
     protected void initUI() {
         uiController = new JjoController(getGameScene());
+        Text uiScore = new Text("");
+        uiScore.setFont(Font.font(22));
+        uiScore.setTranslateX(getAppWidth() - 200);
+        uiScore.setTranslateY(50);
+//        uiScore.fillProperty().bind(getop("stageColor"));
+        uiScore.textProperty().bind(getip("score").asString());
+
+        addUINode(uiScore);
 
         UI ui = getAssetLoader().loadUI("main.fxml", uiController);
 
@@ -276,8 +291,8 @@ public class JjoApp extends GameApplication {
 //            player.setZIndex(Integer.MAX_VALUE);
 //        }
 
-        getGameWorld().getEntitiesCopy().forEach(e -> e.removeFromWorld());
-        setLevelFromMap("level" + levelNumber + ".tmx");
+//        getGameWorld().getEntitiesCopy().forEach(e -> e.removeFromWorld());
+//        setLevelFromMap("level" + levelNumber + ".tmx");
 
 //        spawn("player", 50, 50);
 
