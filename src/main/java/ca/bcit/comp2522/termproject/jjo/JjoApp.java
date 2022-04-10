@@ -4,29 +4,19 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.input.virtual.VirtualButton;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.ui.UI;
-import com.almasb.fxgl.entity.level.Level;
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.geometry.Point2D;
-import javafx.scene.Group;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -47,10 +37,14 @@ public class JjoApp extends GameApplication {
     private static final int PLAYER_SIZE = 50;
     private static final int GAME_WIDTH = 50;
     private static final int GAME_HEIGHT = 60;
+    private static final int SCREEN_WIDTH = 1280;
+    private static final int SCREEN_HEIGHT = 720;
     private Entity player;
     private static final int STARTING_LEVEL = 0;
+    private static final int NUMBER_LIVES = 3;
     private static final int MAX_SCORE = 6;
-    private static final int MAX_LEVEL = 3;
+    private static final int INIT_SCORE = 0;
+    private static final int INIT_TIME = 30;
     private double playerXPos = 150.0;
     private double playerYPos = 50.0;
     private ArrayList<CoinPosition> removedEntities = new ArrayList<>();
@@ -69,8 +63,8 @@ public class JjoApp extends GameApplication {
      */
     @Override
     protected void initSettings(final GameSettings settings) {
-        settings.setWidth(1280);
-        settings.setHeight(720);
+        settings.setWidth(SCREEN_WIDTH);
+        settings.setHeight(SCREEN_HEIGHT);
         System.out.println("init SceneFactory");
         settings.setSceneFactory(new JjoSceneFactory());
         System.out.println("Done SceneFactory");
@@ -164,18 +158,16 @@ public class JjoApp extends GameApplication {
             ex.printStackTrace();
         }
     }
-
     /**
-     * Initializes game variables
+     * Initializes game variables.
      *
      * @param vars of type GameVariables
      */
     @Override
     protected void initGameVars(final Map<String, Object> vars) {
-        vars.put("lives", 3);
-        vars.put("level", STARTING_LEVEL);
-        vars.put("score", 0);
-        vars.put("levelTime", 30);
+        vars.put("lives", NUMBER_LIVES);
+        vars.put("score", INIT_SCORE);
+        vars.put("levelTime", INIT_TIME);
     }
 
     /**
@@ -188,14 +180,14 @@ public class JjoApp extends GameApplication {
         // Load saved game
 //        showLoadGame();
 //        loadSavedGame();
-        System.out.println("init Game");
+
         setLevelFromMap("new.tmx");
         player = null;
-        nextLevel();
+
         player = getGameWorld().spawn("player", 50, 50);
         set("player", player);
         spawn("background");
-//        player = getGameWorld().spawn("player", playerXPos, playerYPos);
+
         // Follows character on map and adjusts screen accordingly
         Viewport viewport = getGameScene().getViewport();
         viewport.setBounds(-1500, 0, 200 * 16, getAppHeight());
@@ -223,7 +215,7 @@ public class JjoApp extends GameApplication {
                 removedEntities.add(new CoinPosition(coin.getPosition().getX(), coin.getPosition().getY()));
                 inc("score", 1);
                 if (geti("score") == MAX_SCORE) {
-                    nextLevel();
+                    showMessage("You win!");
                 }
                 coin.removeFromWorld();
             }
@@ -243,23 +235,11 @@ public class JjoApp extends GameApplication {
 
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.CHECKPOINT) {
             @Override
-            protected void onCollisionBegin(Entity player, Entity checkpoint) {
+            protected void onCollisionBegin(final Entity player, final Entity checkpoint) {
                 inc("levelTime", 20);
             }
         });
     }
-
-
-    private void nextLevel() {
-        inc("level", +1);
-
-        if (geti("level") == MAX_LEVEL) {
-            showMessage("You win!");
-            return;
-        }
-        setLevel(geti("level"));
-    }
-
     /**
      * Updates character.
      *
@@ -272,11 +252,9 @@ public class JjoApp extends GameApplication {
         }
     }
 
-    private void onPlayerDied() {
-        setLevelFromMap("main.tmx");
-    }
-
-
+    /**
+     * Initializes UI.
+     */
     @Override
     protected void initUI() {
         uiController = new JjoController(getGameScene());
@@ -301,20 +279,6 @@ public class JjoApp extends GameApplication {
 
         getGameScene().addUI(ui);
     }
-
-    private void setLevel(final int levelNumber) {
-//        if (player != null) {
-//            player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
-//            player.setZIndex(Integer.MAX_VALUE);
-//        }
-//
-//        getGameWorld().getEntitiesCopy().forEach(e -> e.removeFromWorld());
-//        setLevelFromMap("level" + levelNumber + ".tmx");
-//
-//        spawn("player", 50, 50);
-
-    }
-
     private void showGameOver() {
         getDialogService().showConfirmationBox("Game Over You died.\nPress R to restart", yes -> {
             if (yes) {
@@ -330,13 +294,14 @@ public class JjoApp extends GameApplication {
      * Drives the program.
      *
      * @param args unused
+     * @throws ClassNotFoundException if not found
      */
     public static void main(final String[] args) throws ClassNotFoundException {
-//        boolean loggedIn = AuthenticationHandler.login("Vasily", "YesItIsOVer9000");
-//        if (loggedIn) {
-//            launch(args);
-//        }
-//        AuthenticationHandler.createAccount("Vasy", "YesItIsOVer9000");
+        boolean loggedIn = AuthenticationHandler.login("Vasily", "YesItIsOVer9000");
+        if (loggedIn) {
+            launch(args);
+        }
+        AuthenticationHandler.createAccount("Vasy", "YesItIsOVer9000");
         launch(args);
     }
 }

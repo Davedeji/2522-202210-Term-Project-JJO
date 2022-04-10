@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.0.1" orientation="orthogonal" renderorder="right-down" width="200" height="40" tilewidth="16" tileheight="16" nextobjectid="13">
+<map version="1.0" tiledversion="1.0.1" orientation="orthogonal" renderorder="right-down" width="200" height="40" tilewidth="16" tileheight="16" nextobjectid="14">
  <tileset firstgid="1" name="jungle tileset" tilewidth="16" tileheight="16" spacing="2" tilecount="840" columns="42">
   <image source="jungle tileset.png" width="768" height="368"/>
  </tileset>
@@ -57,6 +58,8 @@
   <object id="8" type="coin" x="184.906" y="554.717" width="25.1572" height="25.1572"/>
   <object id="9" type="coin" x="408.805" y="566.038" width="25.1572" height="25.1572"/>
   <object id="10" type="coin" x="754.717" y="563.522" width="25.1572" height="25.1572"/>
+  <object id="12" type="checkpoint" x="888" y="576"/>
+  <object id="13" x="337" y="292" height="1"/>
   <object id="12" type="door" x="1556.94" y="534.443" width="69.2679" height="70.5389"/>
  </objectgroup>
 </map>
