@@ -12,6 +12,11 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.ui.UI;
 import com.almasb.fxgl.entity.level.Level;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.TextField;
@@ -20,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.sql.*;
@@ -50,7 +56,10 @@ public class JjoApp extends GameApplication {
     private ArrayList<CoinPosition> removedEntities = new ArrayList<>();
     private JjoController uiController;
     private PlayerComponent playerComponent;
-//    private ArrayList<CoinPosition> copyEntities = new ArrayList<>();
+    //    private ArrayList<CoinPosition> copyEntities = new ArrayList<>();
+    private IntegerProperty countdown = new SimpleIntegerProperty(0);
+    private BooleanBinding isCountdownGreaterZero = countdown.greaterThan(0);
+    private BooleanProperty timerCondition = new SimpleBooleanProperty();
 
 
     /**
@@ -66,7 +75,7 @@ public class JjoApp extends GameApplication {
         settings.setSceneFactory(new JjoSceneFactory());
         System.out.println("Done SceneFactory");
         settings.setTitle("Jack Jumps");
-        settings.setMainMenuEnabled(true);
+//        settings.setMainMenuEnabled(true);
     }
 
 
@@ -166,7 +175,7 @@ public class JjoApp extends GameApplication {
         vars.put("lives", 3);
         vars.put("level", STARTING_LEVEL);
         vars.put("score", 0);
-        vars.put("levelTime", 0.0);
+        vars.put("levelTime", 30);
     }
 
     /**
@@ -180,7 +189,7 @@ public class JjoApp extends GameApplication {
 //        showLoadGame();
 //        loadSavedGame();
         System.out.println("init Game");
-        setLevelFromMap("extralong.tmx");
+        setLevelFromMap("new.tmx");
         player = null;
         nextLevel();
         player = getGameWorld().spawn("player", 50, 50);
@@ -192,6 +201,14 @@ public class JjoApp extends GameApplication {
         viewport.setBounds(-1500, 0, 200 * 16, getAppHeight());
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         viewport.setLazy(true);
+
+        getGameTimer().runAtInterval(() -> {
+            inc("levelTime", -1);
+            if (geti("levelTime") == 0) {
+                showGameOver();
+            }
+        }, Duration.seconds(1));
+
     }
 
 
@@ -215,17 +232,23 @@ public class JjoApp extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.ENEMY) {
             @Override
             protected void onCollisionBegin(final Entity player, final Entity enemy) {
-                System.out.println("You touched enemy");
                 inc("lives", -1);
                 uiController.removeLife();
                 // if health is 0, game over
-                if (geti("lives")==0) {
+                if (geti("lives") == 0) {
                     showGameOver();
-//                    onPlayerDied();
                 }
             }
         });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(JjoType.PLAYER, JjoType.CHECKPOINT) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity checkpoint) {
+                inc("levelTime", 20);
+            }
+        });
     }
+
 
     private void nextLevel() {
         inc("level", +1);
@@ -244,18 +267,13 @@ public class JjoApp extends GameApplication {
      */
     @Override
     protected void onUpdate(final double tpf) {
-        inc("levelTime", tpf);
-
         if (player.getY() > getAppHeight()) {
-//            showGameOver();
-//            onPlayerDied();
-//            requestNewGame();
             getGameController().startNewGame();
         }
     }
 
     private void onPlayerDied() {
-        setLevelFromMap("extralong.tmx");
+        setLevelFromMap("main.tmx");
     }
 
 
@@ -263,12 +281,18 @@ public class JjoApp extends GameApplication {
     protected void initUI() {
         uiController = new JjoController(getGameScene());
         Text uiScore = new Text("");
+        Text timer = new Text("");
+        timer.setFont(Font.font(22));
+        timer.setTranslateY(70);
+        timer.setTranslateX(getAppWidth() - 200);
+        timer.textProperty().bind(getip("levelTime").asString());
+
         uiScore.setFont(Font.font(22));
         uiScore.setTranslateX(getAppWidth() - 200);
         uiScore.setTranslateY(50);
-//        uiScore.fillProperty().bind(getop("stageColor"));
+//        uiScore.fillProperty().bind(getop(d"stageColor"));
         uiScore.textProperty().bind(getip("score").asString());
-
+        addUINode(timer);
         addUINode(uiScore);
 
         UI ui = getAssetLoader().loadUI("main.fxml", uiController);
@@ -283,10 +307,10 @@ public class JjoApp extends GameApplication {
 //            player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(50, 50));
 //            player.setZIndex(Integer.MAX_VALUE);
 //        }
-
+//
 //        getGameWorld().getEntitiesCopy().forEach(e -> e.removeFromWorld());
 //        setLevelFromMap("level" + levelNumber + ".tmx");
-
+//
 //        spawn("player", 50, 50);
 
     }
