@@ -101,7 +101,6 @@ public class MainMenu extends FXGLMenu {
      */
     @Override
     public void onCreate() {
-        System.out.println("onCreate");
         animation.setOnFinished(EmptyRunnable.INSTANCE);
         animation.stop();
         animation.start();

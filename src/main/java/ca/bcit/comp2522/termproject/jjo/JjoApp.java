@@ -61,8 +61,8 @@ public class JjoApp extends GameApplication {
     private static final int PLAYER_SIZE = 50;
     private static final int SCREEN_WIDTH = 1280;
     private static final int SCREEN_HEIGHT = 720;
-    private static final int NUMBER_LIVES = 3;
-    private static final int MAX_SCORE = 6;
+    private static final int NUMBER_LIVES = 6;
+    private static final int MAX_SCORE = 21;
     private static final int INIT_SCORE = 0;
     private static final int INIT_TIME = 30;
     private static final int VIEWPORT_MIN_X = -1500;
@@ -98,7 +98,6 @@ public class JjoApp extends GameApplication {
     protected void initInput() {
         initXControls();
         initYControls();
-        //fixme: change save keycode
         getInput().addAction(new UserAction("Save") {
             @Override
             protected void onActionEnd() {
@@ -145,7 +144,6 @@ public class JjoApp extends GameApplication {
     }
 
     private void saveGame() {
-        System.out.println("Saving");
         playerXPos = jjoPlayer.getPosition().getX();
         playerYPos = jjoPlayer.getPosition().getY();
         try {
@@ -164,15 +162,12 @@ public class JjoApp extends GameApplication {
      * Loads saved game.
      */
     private void loadSavedGame() {
-        System.out.println("Loading");
         try {
             FileInputStream fos = new FileInputStream("output.ser");
             ObjectInputStream ois = new ObjectInputStream(fos);
             removedEntities = (ArrayList<CoinPosition>) ois.readObject();
             playerXPos = (Double) ois.readObject();
             playerYPos = (Double) ois.readObject();
-            System.out.println("Player X: " + playerXPos);
-            System.out.println("Player Y: " + playerYPos);
             ois.close();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -196,7 +191,7 @@ public class JjoApp extends GameApplication {
     @Override
     protected void initGame() {
         getGameWorld().addEntityFactory(new JjoFactory());
-        setLevelFromMap("new.tmx");
+        setLevelFromMap("new_beta.tmx");
         jjoPlayer = getGameWorld().spawn("player", PLAYER_SIZE, PLAYER_SIZE);
         set("player", jjoPlayer);
         spawn("background");
@@ -322,8 +317,6 @@ public class JjoApp extends GameApplication {
      * @throws ClassNotFoundException if not found
      */
     public static void main(final String[] args) throws ClassNotFoundException {
-        //fixme: remove this password comment
-//        AuthenticationHandler.createAccount("Vasy", "YesItIsOVer9000");
         launch(args);
     }
 }

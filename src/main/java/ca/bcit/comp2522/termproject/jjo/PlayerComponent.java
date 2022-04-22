@@ -23,8 +23,6 @@ public class PlayerComponent extends Component {
     private static final int FRAME_HEIGHT = 16;
     private static final int JUMP_INITIALIZER = 2;
     private static int jumps = JUMP_INITIALIZER;
-//    private static int health = 3;
-
     private PhysicsComponent physics;
 
     /**

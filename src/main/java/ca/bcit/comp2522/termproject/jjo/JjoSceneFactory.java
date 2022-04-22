@@ -16,7 +16,6 @@ public class JjoSceneFactory extends SceneFactory {
      */
     @Override
     public FXGLMenu newMainMenu() {
-        System.out.println("Main Menu");
         return new MainMenu(MenuType.MAIN_MENU);
     }
 }
