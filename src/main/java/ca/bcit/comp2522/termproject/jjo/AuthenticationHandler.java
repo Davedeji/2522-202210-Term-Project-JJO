@@ -13,9 +13,8 @@ import java.sql.ResultSet;
  */
 public final class AuthenticationHandler {
     private static Connection connection;
-    private static final String DB_USER = "root";
-    //fixme: change password
-    private static final String DB_PASSWORD = "";
+    private static final String DB_USER = "chris";
+    private static final String DB_PASSWORD = "i was born in 1973";
 
 
     private AuthenticationHandler() {
