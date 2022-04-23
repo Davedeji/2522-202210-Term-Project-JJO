@@ -54,9 +54,7 @@ public class JjoApp extends GameApplication {
     private static final int SCORE_Y_OFFSET = 50;
     private static final int TIMER_X_OFFSET = 200;
     private static final int TIMER_Y_OFFSET = 70;
-
     private static final int SCORE_INCREMENT = 20;
-
     private static final int GRID_SIZE = 16;
     private static final int PLAYER_SIZE = 50;
     private static final int SCREEN_WIDTH = 1280;
